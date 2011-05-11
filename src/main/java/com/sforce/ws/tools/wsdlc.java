@@ -64,7 +64,12 @@ public class wsdlc {
     public wsdlc(String wsdlFile, String jarFile, String temp)
             throws ToolsException, WsdlParseException, IOException, TemplateException {
 
-        checkTargetFile(jarFile);
+    	// (Ab)using jarFile as a check for if we should compile sources. If jarFile is null
+    	// sources will not be compiled.
+    	
+    	if(jarFile!=null) {
+    		checkTargetFile(jarFile);
+    	}
         createTempDir(temp);
         Verbose.log("Created temp dir: " + tempDir.getAbsolutePath());
 
@@ -85,9 +90,14 @@ public class wsdlc {
             generateAggregateResult(definitions);
         }
 
-        compileTypes();
-        generateJarFile(jarFile);
+    	// (Ab)using jarFile as a check for if we should compile sources. If jarFile is null
+    	// sources will not be compiled.
 
+        if(jarFile!=null) {
+	        compileTypes();
+	        generateJarFile(jarFile);
+        }
+	
         if (Boolean.parseBoolean(System.getProperty("del-temp-dir", "true"))) {
             Verbose.log("Delete temp dir: " + tempDir.getAbsolutePath());
             Verbose.log("Set system property del-temp-dir=false to not delete temp dir.");
